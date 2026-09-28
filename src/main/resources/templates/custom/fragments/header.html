@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi"
+	xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header" class="topbar">
+	<div class="brand">
+		<a th:href="@{/custom/}">UTEShop</a>
+	</div>
+
+	<div class="account" th:if="${#authorization.expression('isAuthenticated()')}"
+		th:with="img=${#authentication.principal.images},
+			isAdmin=${#authentication.principal.role == 'ROLE_ADMIN'}">
+
+		<img class="avatar"
+			th:src="@{${img != null and !#strings.isEmpty(img)
+				? img
+				: (isAdmin ? '/images/admin.png' : '/images/avatar-default.png')}}"
+			alt="Avatar">
+
+		<div class="account-info">
+			<span class="name" th:text="${#authentication.principal.fullName}">Nguyễn Văn A</span>
+			<span class="mail" th:text="${#authentication.principal.email}">email@gmail.com</span>
+		</div>
+
+		<span class="badge"
+			th:classappend="${isAdmin} ? 'badge-admin' : 'badge-user'"
+			th:text="${#authentication.principal.role}">ROLE_USER</span>
+
+		<form th:action="@{/custom/logout}" method="post" style="display:inline">
+			<button class="link-button" type="submit">Đăng xuất</button>
+		</form>
+	</div>
+
+	<div class="account" th:unless="${#authorization.expression('isAuthenticated()')}">
+		<a class="link-button" th:href="@{/custom/login}">Đăng nhập</a>
+	</div>
+</header>
+
+</body>
+</html>

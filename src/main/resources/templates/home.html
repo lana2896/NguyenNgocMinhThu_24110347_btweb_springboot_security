@@ -1,10 +1,32 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layouts/layout :: head('Home')}"></head>
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
 <main class="container">
-	<h1>Home</h1>
+
+	<section class="hero" sec:authorize="isAuthenticated()">
+		<img class="avatar avatar-lg" th:src="@{/images/admin.png}" alt="Ảnh admin" sec:authorize="hasRole('ADMIN')">
+		<img class="avatar avatar-lg" th:src="@{/images/user.png}" alt="Ảnh user" sec:authorize="!hasRole('ADMIN')">
+		<div>
+			<h1>Xin chào, <span sec:authentication="name">user</span></h1>
+			<p>Chào mừng bạn đến với IOTSTAR SHOP.</p>
+			<span class="badge badge-admin" sec:authorize="hasRole('ADMIN')">ADMIN</span>
+			<span class="badge badge-user" sec:authorize="!hasRole('ADMIN')">USER</span>
+		</div>
+	</section>
+
+	<section class="hero" sec:authorize="!isAuthenticated()">
+		<img class="avatar avatar-lg" th:src="@{/images/avatar-default.png}" alt="Ảnh mặc định">
+		<div>
+			<h1>IOTSTAR SHOP</h1>
+			<p>Bạn chưa đăng nhập. Hãy đăng nhập để tiếp tục.</p>
+			<a class="btn secondary mt" th:href="@{/login}">Đăng nhập</a>
+		</div>
+	</section>
+
 </main>
+<footer class="footer">Copyright © IOTSTAR SHOP</footer>
 </body>
 </html>

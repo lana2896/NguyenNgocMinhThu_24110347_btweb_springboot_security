@@ -6,8 +6,18 @@
 	<div class="brand">
 		<a th:href="@{/}">IOTSTAR SHOP</a>
 	</div>
+	<nav sec:authorize="hasRole('ADMIN')">
+		<a th:href="@{/}">Trang chủ</a>
+		<a th:href="@{/dashboard}">Dashboard</a>
+	</nav>
 	<div class="account" sec:authorize="isAuthenticated()">
-		<span sec:authentication="name">user</span>
+		<img class="avatar" th:src="@{/images/admin.png}" alt="Ảnh admin" sec:authorize="hasRole('ADMIN')">
+		<img class="avatar" th:src="@{/images/user.png}" alt="Ảnh user" sec:authorize="!hasRole('ADMIN')">
+		<div class="account-info">
+			<span class="name" sec:authentication="name">user</span>
+			<span class="mail" sec:authorize="hasRole('ADMIN')">Quản trị viên</span>
+			<span class="mail" sec:authorize="!hasRole('ADMIN')">Người dùng</span>
+		</div>
 		<form th:action="@{/logout}" method="post" style="display:inline">
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 			<button class="link-button" type="submit">Đăng xuất</button>

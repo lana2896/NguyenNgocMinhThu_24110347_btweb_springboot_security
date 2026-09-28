@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layouts/layout :: head('Dashboard')}"></head>
 <body>
 <header th:replace="~{fragments/header :: header}"></header>
 <main class="container">
-	<h1>Dashboard</h1>
+	<div class="page-title">
+		<div>
+			<h1>Dashboard</h1>
+			<p class="subtitle">Trang dành cho quản trị viên.</p>
+		</div>
+	</div>
+
+	<div class="grid-2">
+		<section class="panel">
+			<h2>Tài khoản đang đăng nhập</h2>
+			<div class="profile">
+				<img class="avatar avatar-lg" th:src="@{/images/admin.png}" alt="Ảnh admin">
+				<dl>
+					<dt>Email</dt>
+					<dd sec:authentication="name">admin@email.com</dd>
+					<dt>Vai trò</dt>
+					<dd><span class="badge badge-admin">ADMIN</span></dd>
+					<dt>Quyền</dt>
+					<dd sec:authentication="principal.authorities">ROLE_ADMIN</dd>
+				</dl>
+			</div>
+		</section>
+
+	</div>
 </main>
+<footer class="footer">Copyright © IOTSTAR SHOP</footer>
 </body>
 </html>

@@ -49,6 +49,7 @@ VALUES (
     (SELECT id FROM dbo.roles WHERE name = 'USER')
 );
 GO
+
 IF NOT EXISTS (SELECT 1 FROM dbo.users WHERE email = 'minhthu@hcmute.edu.vn')
 INSERT INTO dbo.users (email, password, full_name, enabled, created_at, role_id)
 VALUES (
@@ -59,8 +60,10 @@ VALUES (
     SYSDATETIME(),
     (SELECT id FROM dbo.roles WHERE name = 'ADMIN')
 );
+GO
 
-CREATE USER root FOR LOGIN root;
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = N'root')
+    CREATE USER root FOR LOGIN root;
 GO
 
 ALTER ROLE db_owner ADD MEMBER root;
