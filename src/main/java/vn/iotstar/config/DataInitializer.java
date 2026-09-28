@@ -16,7 +16,7 @@ public class DataInitializer {
 
 	@Bean
 	CommandLineRunner initData(RoleRepository roles, UserRepository users, PasswordEncoder encoder,
-			@Value("${ADMIN_EMAIL:trungnh@hcmute.edu.vn}") String adminEmail,
+			@Value("${ADMIN_EMAIL:minhthu0809@hcmute.edu.vn}") String adminEmail,
 			@Value("${ADMIN_PASSWORD:123456}") String adminPassword) {
 		return args -> {
 			Role userRole = roles.findByNameIgnoreCase("USER").orElseGet(() -> roles.save(new Role("USER")));
