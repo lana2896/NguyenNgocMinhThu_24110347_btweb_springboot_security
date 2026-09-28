@@ -37,3 +37,31 @@ GO
 IF NOT EXISTS (SELECT 1 FROM dbo.roles WHERE name = 'USER')  INSERT INTO dbo.roles(name) VALUES ('USER');
 IF NOT EXISTS (SELECT 1 FROM dbo.roles WHERE name = 'ADMIN') INSERT INTO dbo.roles(name) VALUES ('ADMIN');
 GO
+
+IF NOT EXISTS (SELECT 1 FROM dbo.users WHERE email = 'minhthu@gmail.com')
+INSERT INTO dbo.users (email, password, full_name, enabled, created_at, role_id)
+VALUES (
+    'minhthu@gmail.com',
+    '$2a$10$hjvzifUyZrz58pm9vicJQ.LMXlT6gXCAWRIHuDpJnM.Pyodivt08K',
+    N'Nguyễn Ngọc Minh Thư',
+    1,
+    SYSDATETIME(),
+    (SELECT id FROM dbo.roles WHERE name = 'USER')
+);
+GO
+IF NOT EXISTS (SELECT 1 FROM dbo.users WHERE email = 'minhthu@hcmute.edu.vn')
+INSERT INTO dbo.users (email, password, full_name, enabled, created_at, role_id)
+VALUES (
+    'minhthu@hcmute.edu.vn',
+    '$2a$10$qQKQc4lsdnl9OgnDvLUuS.JvX18lm.UrqmzZ5/gmgQMniWkq5xkFe',
+    N'System Administrator',
+    1,
+    SYSDATETIME(),
+    (SELECT id FROM dbo.roles WHERE name = 'ADMIN')
+);
+
+CREATE USER root FOR LOGIN root;
+GO
+
+ALTER ROLE db_owner ADD MEMBER root;
+GO
