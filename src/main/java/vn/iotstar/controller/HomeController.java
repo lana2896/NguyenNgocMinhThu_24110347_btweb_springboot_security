@@ -1,24 +1,15 @@
 package vn.iotstar.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import vn.iotstar.service.*;
 
-@Controller
+@Controller @RequiredArgsConstructor
 public class HomeController {
-
-	@GetMapping("/")
-	String home() {
-		return "home";
-	}
-
-	@GetMapping("/dashboard")
-	String dashboard() {
-		return "dashboard";
-	}
-
-	@GetMapping("/access-denied")
-	String accessDenied() {
-		return "access-denied";
-	}
-
+    private final UserService userService;
+    private final ProductService productService;
+    @GetMapping("/") public String home(Model model){model.addAttribute("userCount",userService.countUsers());model.addAttribute("productCount",productService.countProducts());return "home";}
+    @GetMapping("/access-denied") public String accessDenied(){return "access-denied";}
 }

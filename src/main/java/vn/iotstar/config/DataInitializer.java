@@ -14,23 +14,35 @@ import vn.iotstar.repository.UserRepository;
 @Configuration
 public class DataInitializer {
 
-	@Bean
-	CommandLineRunner initData(RoleRepository roles, UserRepository users, PasswordEncoder encoder,
-			@Value("${ADMIN_EMAIL:minhthu0809@hcmute.edu.vn}") String adminEmail,
-			@Value("${ADMIN_PASSWORD:123456}") String adminPassword) {
-		return args -> {
-			Role userRole = roles.findByNameIgnoreCase("USER").orElseGet(() -> roles.save(new Role("USER")));
-			Role adminRole = roles.findByNameIgnoreCase("ADMIN").orElseGet(() -> roles.save(new Role("ADMIN")));
-			if (!users.existsByEmailIgnoreCase(adminEmail)) {
-				User admin = new User();
-				admin.setEmail(adminEmail.toLowerCase());
-				admin.setFullName("System Administrator");
-				admin.setPassword(encoder.encode(adminPassword));
-				admin.setRole(adminRole);
-				admin.setEnabled(true);
-				users.save(admin);
-			}
-		};
-	}
+    @Bean
+    CommandLineRunner initData(
+            RoleRepository roles,
+            UserRepository users,
+            PasswordEncoder encoder,
+            @Value("${ADMIN_USERNAME:admin}") String adminUsername,
+            @Value("${ADMIN_EMAIL:minhthu0809@hcmute.edu.vn}") String adminEmail,
+            @Value("${ADMIN_PASSWORD:123456}") String adminPassword) {
 
+        return args -> {
+            Role userRole = roles.findByName("ROLE_USER")
+                    .orElseGet(() -> roles.save(new Role("ROLE_USER")));
+
+            Role adminRole = roles.findByName("ROLE_ADMIN")
+                    .orElseGet(() -> roles.save(new Role("ROLE_ADMIN")));
+
+            if (!users.existsByUsername(adminUsername)
+                    && !users.existsByEmail(adminEmail)) {
+
+                User admin = new User();
+                admin.setUsername(adminUsername);
+                admin.setEmail(adminEmail.toLowerCase());
+                admin.setFullName("System Administrator");
+                admin.setPassword(encoder.encode(adminPassword));
+                admin.setRole(adminRole);
+                admin.setEnabled(true);
+
+                users.save(admin);
+            }
+        };
+    }
 }

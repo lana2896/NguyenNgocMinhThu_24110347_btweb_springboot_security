@@ -1,31 +1,14 @@
 package vn.iotstar.security;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
-
-import vn.iotstar.entity.User;
 import vn.iotstar.repository.UserRepository;
 
-@Service
+@Service @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-
-	private final UserRepository users;
-
-	public CustomUserDetailsService(UserRepository users) {
-		this.users = users;
-	}
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User u = users.findByEmailWithRole(username)
-				.orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản."));
-		return org.springframework.security.core.userdetails.User.withUsername(u.getEmail())
-				.password(u.getPassword())
-				.roles(u.getRole().getName())
-				.disabled(!u.isEnabled())
-				.build();
-	}
-
+    private final UserRepository userRepository;
+    @Override public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username).map(user->User.withUsername(user.getUsername()).password(user.getPassword()).roles(user.getRole().getName().replace("ROLE_","")).disabled(!user.isEnabled()).build()).orElseThrow(()->new UsernameNotFoundException("Username không tồn tại"));
+    }
 }
